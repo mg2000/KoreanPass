@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,6 +18,9 @@ namespace KoreanPass
 {
 	public partial class MainForm : Form
 	{
+		[DllImport("Kernel32.dll", EntryPoint="OpenProcess")]
+		static extern void OpenProcess();
+
 		private List<AvailableGame> mAvailableList = new List<AvailableGame>();
 			
 		//private List<AvailableGame> mAvailableList = null;

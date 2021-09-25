@@ -18,9 +18,6 @@ namespace KoreanPass
 {
 	public partial class MainForm : Form
 	{
-		[DllImport("Kernel32.dll", EntryPoint="OpenProcess")]
-		static extern void OpenProcess();
-
 		private List<AvailableGame> mAvailableList = new List<AvailableGame>();
 			
 		//private List<AvailableGame> mAvailableList = null;
@@ -47,7 +44,21 @@ namespace KoreanPass
 			{
 				Name = "Dishorned",
 				KoreanName = "디스아너드",
-				ProcessName = "Dishonored_DO_x64"
+				ProcessName = "Dishonored"
+			});
+
+			mAvailableList.Add(new AvailableGame()
+			{
+				Name = "Grim Fandango Remastered",
+				KoreanName = "그림 판당고",
+				ProcessName = "GrimFandango"
+			});
+
+			mAvailableList.Add(new AvailableGame()
+			{
+				Name = "Yakuza 6: Song of Life",
+				KoreanName = "용과 같이 6",
+				ProcessName = "Yakuza6"
 			});
 		}
 
@@ -152,28 +163,49 @@ namespace KoreanPass
 			runningProcess.WaitForExit();
 
 			if (MessageBox.Show("게임 데이터를 복사하였습니다. 이전 게임을 제거하시고, 확인 버튼을 눌러 주십시오. 게임을 제거하지 않고 확인버튼을 누르면 게임 데이터가 손상될 수 있습니다.", "게임 데이터 복사 완료", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK) {
-				using (var powerShell = PowerShell.Create()) {
-					//powerShell.AddScript("Set-ExecutionPolicy Unrestricted");
-					//powerShell.AddScript("Get-ExecutionPolicy");
-					powerShell.AddScript($"Add-AppxPackage -Register \"{destPath}\\AppxManifest.xml\"");
-					powerShell.Invoke();
-
-					var errors = powerShell.Streams.Error;
-
-					if (errors != null && errors.Count > 0) {
-						var errorMessage = new StringBuilder();
-
-						errorMessage.Append("복사한 데이터를 등록할 수 없습니다.\r\n\r\n");
-						
-						foreach (var error in errors) {
-							errorMessage.Append(error.ToString()).Append("\r\n");
-						}
-
-						MessageBox.Show(errorMessage.ToString(), "등록 실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				using var powerShell = PowerShell.Create();
+				powerShell.AddScript("Get-ExecutionPolicy");
+				var output = powerShell.Invoke();
+				if (output.Count > 0)
+				{
+					if (output[0].ToString() != "Unrestricted")
+					{
+						powerShell.AddScript("Set-ExecutionPolicy Unrestricted");
+						powerShell.Invoke();
 					}
-					else
-						MessageBox.Show("복사한 데이터를 등록하였습니다. 한글 패치를 적용해 주십시오.", "등록 성공", MessageBoxButtons.OK, MessageBoxIcon.Information);
 				}
+
+				powerShell.AddScript("Get-ExecutionPolicy");
+				output = powerShell.Invoke();
+				if (output.Count > 0)
+				{
+					if (output[0].ToString() != "Unrestricted")
+					{
+						MessageBox.Show("복사한 데이터를 등록할 권한이 없습니다: " + output[0].ToString(), "등록 실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						return;
+					}
+				}
+
+				powerShell.AddScript($"Add-AppxPackage -Register \"{destPath}\\AppxManifest.xml\"");
+				powerShell.Invoke();
+
+				var errors = powerShell.Streams.Error;
+
+				if (errors != null && errors.Count > 0)
+				{
+					var errorMessage = new StringBuilder();
+
+					errorMessage.Append("복사한 데이터를 등록할 수 없습니다.\r\n\r\n");
+
+					foreach (var error in errors)
+					{
+						errorMessage.Append(error.ToString()).Append("\r\n");
+					}
+
+					MessageBox.Show(errorMessage.ToString(), "등록 실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				else
+					MessageBox.Show("복사한 데이터를 등록하였습니다. 한글 패치를 적용해 주십시오.", "등록 성공", MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 		}
 	}

@@ -6,6 +6,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Management.Automation;
 using System.Net.Http;
@@ -60,16 +61,6 @@ namespace KoreanPass
 				KoreanName = "용과 같이 6",
 				ProcessName = "Yakuza6"
 			});
-		}
-
-		private void richTextBox1_LinkClicked(object sender, LinkClickedEventArgs e)
-		{
-			var ps = new ProcessStartInfo(e.LinkText)
-			{
-				UseShellExecute = true,
-				Verb = "open"
-			};
-			Process.Start(ps);
 		}
 
 		private void LoadProcessList() {
@@ -134,7 +125,6 @@ namespace KoreanPass
 			var startIdx = processInfo.IndexOf(" - ");
 			startIdx += " - ".Length;
 
-
 			var nameEndIdx = processInfo.LastIndexOf("(");
 
 			var processName = processInfo.Substring(startIdx, nameEndIdx - startIdx);
@@ -152,61 +142,90 @@ namespace KoreanPass
 			if (!Directory.Exists(destPath))
 				Directory.CreateDirectory(destPath);
 
+			MessageBox.Show("게임 데이터 추출을 시작합니다. 추출하는 동안 게임을 종료하거나 최소화하지 마시고, 창모드로 실행해 주십시오.", "게임 데이터 복사 준비", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+			txtResult.Text = "게임 데이터 추출 시작\r\n";
+
 			var p = new Process();
 			p.StartInfo.FileName = $"{AppDomain.CurrentDomain.BaseDirectory}UWPInjector.exe";
 			p.StartInfo.Arguments = $"-p {pid} -d \"{destPath}\"";
 			p.Start();
 			p.WaitForExit();
 
+			txtResult.Text += "게임 데이터 추출 완료\r\n";
+
 			var runningProcess = Process.GetProcessById(int.Parse(pid));
 			runningProcess.Kill();
 			runningProcess.WaitForExit();
 
 			if (MessageBox.Show("게임 데이터를 복사하였습니다. 이전 게임을 제거하시고, 확인 버튼을 눌러 주십시오. 게임을 제거하지 않고 확인버튼을 누르면 게임 데이터가 손상될 수 있습니다.", "게임 데이터 복사 완료", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK) {
-				using var powerShell = PowerShell.Create();
-				powerShell.AddScript("Get-ExecutionPolicy");
-				var output = powerShell.Invoke();
-				if (output.Count > 0)
-				{
-					if (output[0].ToString() != "Unrestricted")
-					{
-						powerShell.AddScript("Set-ExecutionPolicy Unrestricted");
-						powerShell.Invoke();
-					}
-				}
-
-				powerShell.AddScript("Get-ExecutionPolicy");
-				output = powerShell.Invoke();
-				if (output.Count > 0)
-				{
-					if (output[0].ToString() != "Unrestricted")
-					{
-						MessageBox.Show("복사한 데이터를 등록할 권한이 없습니다: " + output[0].ToString(), "등록 실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
-						return;
-					}
-				}
-
-				powerShell.AddScript($"Add-AppxPackage -Register \"{destPath}\\AppxManifest.xml\"");
-				powerShell.Invoke();
-
-				var errors = powerShell.Streams.Error;
-
-				if (errors != null && errors.Count > 0)
-				{
-					var errorMessage = new StringBuilder();
-
-					errorMessage.Append("복사한 데이터를 등록할 수 없습니다.\r\n\r\n");
-
-					foreach (var error in errors)
-					{
-						errorMessage.Append(error.ToString()).Append("\r\n");
-					}
-
-					MessageBox.Show(errorMessage.ToString(), "등록 실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				}
-				else
-					MessageBox.Show("복사한 데이터를 등록하였습니다. 한글 패치를 적용해 주십시오.", "등록 성공", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				Register(destPath);
 			}
+		}
+
+		private void Register(string destPath) {
+			using var powerShell = PowerShell.Create();
+			powerShell.AddScript("Get-ExecutionPolicy");
+			var output = powerShell.Invoke();
+			if (output.Count > 0)
+			{
+				if (output[0].ToString() != "Unrestricted")
+				{
+					powerShell.AddScript("Set-ExecutionPolicy Unrestricted");
+					powerShell.Invoke();
+				}
+			}
+
+			powerShell.AddScript("Get-ExecutionPolicy");
+			output = powerShell.Invoke();
+			if (output.Count > 0)
+			{
+				if (output[0].ToString() != "Unrestricted")
+				{
+					MessageBox.Show("복사한 데이터를 등록할 권한이 없습니다: " + output[0].ToString(), "등록 실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+					txtResult.Text += "게임 데이터 등록 권한 없음\r\n";
+
+					return;
+				}
+			}
+
+			powerShell.AddScript($"Add-AppxPackage -Register \"{destPath}\\AppxManifest.xml\"");
+			powerShell.Invoke();
+
+			var errors = powerShell.Streams.Error;
+
+			if (errors != null && errors.Count > 0)
+			{
+				var errorMessage = new StringBuilder();
+
+				errorMessage.Append("복사한 데이터를 등록할 수 없습니다.\r\n\r\n");
+
+				foreach (var error in errors)
+				{
+					if (error.ToString().IndexOf("이미 설치되어") >= 0) {
+						errorMessage.Append("이미 설치된 게임이 있습니다. 이전 설치 게임을 제거하시고, '확인'버튼을 눌러 다시 시도해 주십시오. 등록을 원치 않으면 취소 버튼을 눌러 주십시오.");
+						break;
+					}
+					else
+						errorMessage.Append(error.ToString()).Append("\r\n");
+				}
+
+				txtResult.Text += $"게임 데이터 등록 실패\r\n{errorMessage}\r\n";
+				if (MessageBox.Show(errorMessage.ToString(), "등록 실패", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
+					Register(destPath);
+			}
+			else
+			{
+				txtResult.Text += $"게임 데이터 등록 완료\r\n";
+				MessageBox.Show("복사한 데이터를 등록하였습니다. 한글 패치를 적용해 주십시오.", "등록 성공", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			}
+		}
+
+		private void btnShowLicense_Click(object sender, EventArgs e)
+		{
+
+			new License().ShowDialog();
 		}
 	}
 }

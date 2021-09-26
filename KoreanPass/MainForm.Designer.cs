@@ -33,9 +33,11 @@ namespace KoreanPass
 			this.lstPIDList = new System.Windows.Forms.ListBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.btnRunPatch = new System.Windows.Forms.Button();
-			this.label3 = new System.Windows.Forms.Label();
-			this.richTextBox1 = new System.Windows.Forms.RichTextBox();
 			this.btnRefreshPIDList = new System.Windows.Forms.Button();
+			this.label2 = new System.Windows.Forms.Label();
+			this.patchFileDialog = new System.Windows.Forms.OpenFileDialog();
+			this.txtResult = new System.Windows.Forms.TextBox();
+			this.btnShowLicense = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// lstPIDList
@@ -59,32 +61,13 @@ namespace KoreanPass
 			// 
 			// btnRunPatch
 			// 
-			this.btnRunPatch.Location = new System.Drawing.Point(12, 152);
+			this.btnRunPatch.Location = new System.Drawing.Point(12, 140);
 			this.btnRunPatch.Name = "btnRunPatch";
 			this.btnRunPatch.Size = new System.Drawing.Size(364, 23);
 			this.btnRunPatch.TabIndex = 5;
 			this.btnRunPatch.Text = "실행";
 			this.btnRunPatch.UseVisualStyleBackColor = true;
 			this.btnRunPatch.Click += new System.EventHandler(this.btnRunPatch_Click);
-			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(14, 123);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(85, 15);
-			this.label3.TabIndex = 6;
-			this.label3.Text = "2. 데이터 추출";
-			// 
-			// richTextBox1
-			// 
-			this.richTextBox1.Location = new System.Drawing.Point(15, 194);
-			this.richTextBox1.Name = "richTextBox1";
-			this.richTextBox1.Size = new System.Drawing.Size(360, 115);
-			this.richTextBox1.TabIndex = 7;
-			this.richTextBox1.Text = "저작권 정보\n\n니어 오토마타 한글 패치: https://github.com/nier00/kor/releases\n\nUWPDumper: https:/" +
-    "/github.com/Wunkolo/UWPDumper";
-			this.richTextBox1.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.richTextBox1_LinkClicked);
 			// 
 			// btnRefreshPIDList
 			// 
@@ -96,14 +79,43 @@ namespace KoreanPass
 			this.btnRefreshPIDList.UseVisualStyleBackColor = true;
 			this.btnRefreshPIDList.Click += new System.EventHandler(this.btnRefreshPIDList_Click);
 			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(14, 122);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(85, 15);
+			this.label2.TabIndex = 9;
+			this.label2.Text = "2. 데이터 추출";
+			// 
+			// txtResult
+			// 
+			this.txtResult.Location = new System.Drawing.Point(14, 169);
+			this.txtResult.Multiline = true;
+			this.txtResult.Name = "txtResult";
+			this.txtResult.ReadOnly = true;
+			this.txtResult.Size = new System.Drawing.Size(362, 159);
+			this.txtResult.TabIndex = 12;
+			// 
+			// btnShowLicense
+			// 
+			this.btnShowLicense.Location = new System.Drawing.Point(283, 334);
+			this.btnShowLicense.Name = "btnShowLicense";
+			this.btnShowLicense.Size = new System.Drawing.Size(89, 23);
+			this.btnShowLicense.TabIndex = 13;
+			this.btnShowLicense.Text = "저작권 정보";
+			this.btnShowLicense.UseVisualStyleBackColor = true;
+			this.btnShowLicense.Click += new System.EventHandler(this.btnShowLicense_Click);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(385, 318);
+			this.ClientSize = new System.Drawing.Size(385, 364);
+			this.Controls.Add(this.btnShowLicense);
+			this.Controls.Add(this.txtResult);
+			this.Controls.Add(this.label2);
 			this.Controls.Add(this.btnRefreshPIDList);
-			this.Controls.Add(this.richTextBox1);
-			this.Controls.Add(this.label3);
 			this.Controls.Add(this.btnRunPatch);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.lstPIDList);
@@ -124,9 +136,11 @@ namespace KoreanPass
 		private System.Windows.Forms.ListBox lstPIDList;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button btnRunPatch;
-		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.RichTextBox richTextBox1;
 		private System.Windows.Forms.Button btnRefreshPIDList;
+		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.OpenFileDialog patchFileDialog;
+		private System.Windows.Forms.TextBox txtResult;
+		private System.Windows.Forms.Button btnShowLicense;
 	}
 }
 

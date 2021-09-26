@@ -61,6 +61,20 @@ namespace KoreanPass
 				KoreanName = "용과 같이 6",
 				ProcessName = "Yakuza6"
 			});
+
+			mAvailableList.Add(new AvailableGame()
+			{
+				Name = "Wasteland 2",
+				KoreanName = "웨이스트랜드 2",
+				ProcessName = "WL2"
+			});
+
+			mAvailableList.Add(new AvailableGame()
+			{
+				Name = "Fallout 3",
+				KoreanName = "폴아웃 3",
+				ProcessName = "Fallout3"
+			});
 		}
 
 		private void LoadProcessList() {

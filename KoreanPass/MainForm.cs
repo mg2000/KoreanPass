@@ -71,9 +71,9 @@ namespace KoreanPass
 
 			mAvailableList.Add(new AvailableGame()
 			{
-				Name = "Fallout 3",
-				KoreanName = "폴아웃 3",
-				ProcessName = "Fallout3"
+				Name = "New Super Lucky's Tale",
+				KoreanName = "뉴 슈퍼 럭키 테일",
+				ProcessName = "New Super Lucky's Tale"
 			});
 		}
 
@@ -215,17 +215,40 @@ namespace KoreanPass
 
 				errorMessage.Append("복사한 데이터를 등록할 수 없습니다.\r\n\r\n");
 
+				bool alreadyInstalled = false;
 				foreach (var error in errors)
 				{
-					if (error.ToString().IndexOf("이미 설치되어") >= 0) {
+					if (error.ToString().IndexOf("이미 설치되어") >= 0)
+					{
 						errorMessage.Append("이미 설치된 게임이 있습니다. 이전 설치 게임을 제거하시고, '확인'버튼을 눌러 다시 시도해 주십시오. 등록을 원치 않으면 취소 버튼을 눌러 주십시오.");
+						alreadyInstalled = true;
 						break;
 					}
+					//else if (error.ToString().IndexOf("Import-Module") >= 0) {
+					//	errors.Clear();
+					//	powerShell.AddScript($"Import-Module Appx -UseWindowsPowerShell");
+					//	powerShell.Invoke();
+
+					//	Register(destPath);
+					//	return;
+					//}
 					else
+					{
 						errorMessage.Append(error.ToString()).Append("\r\n");
+					}
+				}
+
+				if (!alreadyInstalled)
+				{
+					errorMessage.Append("\r\n확인 버튼을 눌러 재시도 하시거나, Windows Powershell을 실행한 후, 아래 명령어를 실행해서 수동으로 등록해 주십시오.\r\n");
+					errorMessage.Append("(아래 명령은 클립보드에 복사되었습니다. Powershell에서 마우스 오른쪽 버튼을 누르면 붙여넣기가 됩니다.)\r\n\r\n");
+					errorMessage.Append($"Add-AppxPackage -Register \"{destPath}\\AppxManifest.xml\"");
+
+					Clipboard.SetText($"Add-AppxPackage -Register \"{destPath}\\AppxManifest.xml\"");
 				}
 
 				txtResult.Text += $"게임 데이터 등록 실패\r\n{errorMessage}\r\n";
+
 				if (MessageBox.Show(errorMessage.ToString(), "등록 실패", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
 					Register(destPath);
 			}
@@ -238,8 +261,7 @@ namespace KoreanPass
 
 		private void btnShowLicense_Click(object sender, EventArgs e)
 		{
-
-			new License().ShowDialog();
+			//new License().ShowDialog();
 		}
 	}
 }

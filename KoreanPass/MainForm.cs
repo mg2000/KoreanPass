@@ -103,6 +103,13 @@ namespace KoreanPass
 			//	KoreanName = "피닉스 포인트",
 			//	ProcessName = "Phoenix Point"
 			//});
+
+			mAvailableList.Add(new AvailableGame()
+			{
+				Name = "AI: The Somnium Files",
+				KoreanName = "AI: 솜니움 파일즈",
+				ProcessName = "AI_TheSomniumFiles"
+			});
 		}
 
 		private void LoadProcessList() {

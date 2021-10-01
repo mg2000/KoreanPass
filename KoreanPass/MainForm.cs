@@ -71,10 +71,38 @@ namespace KoreanPass
 
 			mAvailableList.Add(new AvailableGame()
 			{
-				Name = "New Super Lucky's Tale",
-				KoreanName = "뉴 슈퍼 럭키 테일",
-				ProcessName = "New Super Lucky's Tale"
+				Name = "Wasteland 3",
+				KoreanName = "웨이스트랜드 3",
+				ProcessName = "WL3"
 			});
+
+			mAvailableList.Add(new AvailableGame()
+			{
+				Name = "Psychonauts2",
+				KoreanName = "사이코너츠2",
+				ProcessName = "Psychonauts2-WinGDK-Shipping"
+			});
+
+			mAvailableList.Add(new AvailableGame()
+			{
+				Name = "FFVIII",
+				KoreanName = "파이널 판타지 8",
+				ProcessName = "FFVIII"
+			});
+
+			mAvailableList.Add(new AvailableGame()
+			{
+				Name = "Two Point Hospital",
+				KoreanName = "투 포인트 호스피탈",
+				ProcessName = "TPH"
+			});
+
+			//mAvailableList.Add(new AvailableGame()
+			//{
+			//	Name = "Phoenix Point",
+			//	KoreanName = "피닉스 포인트",
+			//	ProcessName = "Phoenix Point"
+			//});
 		}
 
 		private void LoadProcessList() {

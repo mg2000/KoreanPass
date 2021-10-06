@@ -19,97 +19,90 @@ namespace KoreanPass
 {
 	public partial class MainForm : Form
 	{
-		private List<AvailableGame> mAvailableList = new List<AvailableGame>();
+		//private List<AvailableGame> mAvailableList = new List<AvailableGame>();
 			
-		//private List<AvailableGame> mAvailableList = null;
+		private List<AvailableGame> mAvailableList = null;
 
 		public MainForm()
 		{
 			InitializeComponent();
 
-			mAvailableList.Add(new AvailableGame()
-			{
-				Name = "NieR Automata",
-				KoreanName = "니어 오토마타",
-				ProcessName = "NieRAutomata"
-			});
-
-			mAvailableList.Add(new AvailableGame()
-			{
-				Name = "Alien: Isolation",
-				KoreanName = "에일리언: 아이솔레이션",
-				ProcessName = "AI"
-			});
-
-			mAvailableList.Add(new AvailableGame()
-			{
-				Name = "Dishorned",
-				KoreanName = "디스아너드",
-				ProcessName = "Dishonored"
-			});
-
-			mAvailableList.Add(new AvailableGame()
-			{
-				Name = "Grim Fandango Remastered",
-				KoreanName = "그림 판당고",
-				ProcessName = "GrimFandango"
-			});
-
-			mAvailableList.Add(new AvailableGame()
-			{
-				Name = "Yakuza 6: Song of Life",
-				KoreanName = "용과 같이 6",
-				ProcessName = "Yakuza6"
-			});
-
-			mAvailableList.Add(new AvailableGame()
-			{
-				Name = "Wasteland 2",
-				KoreanName = "웨이스트랜드 2",
-				ProcessName = "WL2"
-			});
-
-			mAvailableList.Add(new AvailableGame()
-			{
-				Name = "Wasteland 3",
-				KoreanName = "웨이스트랜드 3",
-				ProcessName = "WL3"
-			});
-
-			mAvailableList.Add(new AvailableGame()
-			{
-				Name = "Psychonauts2",
-				KoreanName = "사이코너츠2",
-				ProcessName = "Psychonauts2-WinGDK-Shipping"
-			});
-
-			mAvailableList.Add(new AvailableGame()
-			{
-				Name = "FFVIII",
-				KoreanName = "파이널 판타지 8",
-				ProcessName = "FFVIII"
-			});
-
-			mAvailableList.Add(new AvailableGame()
-			{
-				Name = "Two Point Hospital",
-				KoreanName = "투 포인트 호스피탈",
-				ProcessName = "TPH"
-			});
+			//mAvailableList.Add(new AvailableGame()
+			//{
+			//	Name = "NieR Automata",
+			//	KoreanName = "니어 오토마타",
+			//	ProcessName = "NieRAutomata"
+			//});
 
 			//mAvailableList.Add(new AvailableGame()
 			//{
-			//	Name = "Phoenix Point",
-			//	KoreanName = "피닉스 포인트",
-			//	ProcessName = "Phoenix Point"
+			//	Name = "Alien: Isolation",
+			//	KoreanName = "에일리언: 아이솔레이션",
+			//	ProcessName = "AI"
 			//});
 
-			mAvailableList.Add(new AvailableGame()
-			{
-				Name = "AI: The Somnium Files",
-				KoreanName = "AI: 솜니움 파일즈",
-				ProcessName = "AI_TheSomniumFiles"
-			});
+			//mAvailableList.Add(new AvailableGame()
+			//{
+			//	Name = "Dishorned",
+			//	KoreanName = "디스아너드",
+			//	ProcessName = "Dishonored"
+			//});
+
+			//mAvailableList.Add(new AvailableGame()
+			//{
+			//	Name = "Grim Fandango Remastered",
+			//	KoreanName = "그림 판당고",
+			//	ProcessName = "GrimFandango"
+			//});
+
+			//mAvailableList.Add(new AvailableGame()
+			//{
+			//	Name = "Yakuza 6: Song of Life",
+			//	KoreanName = "용과 같이 6",
+			//	ProcessName = "Yakuza6"
+			//});
+
+			//mAvailableList.Add(new AvailableGame()
+			//{
+			//	Name = "Wasteland 2",
+			//	KoreanName = "웨이스트랜드 2",
+			//	ProcessName = "WL2"
+			//});
+
+			//mAvailableList.Add(new AvailableGame()
+			//{
+			//	Name = "Wasteland 3",
+			//	KoreanName = "웨이스트랜드 3",
+			//	ProcessName = "WL3"
+			//});
+
+			//mAvailableList.Add(new AvailableGame()
+			//{
+			//	Name = "Psychonauts2",
+			//	KoreanName = "사이코너츠2",
+			//	ProcessName = "Psychonauts2-WinGDK-Shipping"
+			//});
+
+			//mAvailableList.Add(new AvailableGame()
+			//{
+			//	Name = "FFVIII",
+			//	KoreanName = "파이널 판타지 8",
+			//	ProcessName = "FFVIII"
+			//});
+
+			//mAvailableList.Add(new AvailableGame()
+			//{
+			//	Name = "Two Point Hospital",
+			//	KoreanName = "투 포인트 호스피탈",
+			//	ProcessName = "TPH"
+			//});
+
+			//mAvailableList.Add(new AvailableGame()
+			//{
+			//	Name = "AI: The Somnium Files",
+			//	KoreanName = "AI: 솜니움 파일즈",
+			//	ProcessName = "AI_TheSomniumFiles"
+			//});
 		}
 
 		private void LoadProcessList() {
@@ -136,30 +129,31 @@ namespace KoreanPass
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
-			//RequestLoadList();
-			LoadProcessList();
+			RequestLoadList();
+			//LoadProcessList();
 		}
 
 		private async void RequestLoadList() {
-//			try
-//			{
-//				var client = new HttpClient();
-//#if DEBUG
-//				var response = await client.PostAsync("http://127.0.0.1:3000/windows_mod_list", null);
-//#else
-//				var response = await client.PostAsync("http://xbox-korean-viewer-server2.herokuapp.com/windows_mod_list", null);
-//#endif
+			try
+			{
+				var client = new HttpClient();
+#if DEBUG
+				var response = await client.PostAsync("http://127.0.0.1:3000/windows_mod_list", null);
+#else
+				var response = await client.PostAsync("http://xbox-korean-viewer-server2.herokuapp.com/windows_mod_list", null);
+#endif
 
-//				var str = await response.Content.ReadAsStringAsync();
+				var str = await response.Content.ReadAsStringAsync();
 
-//				mAvailableList = JsonConvert.DeserializeObject<List<AvailableGame>>(str);
-//			}
-//			catch (HttpRequestException e) {
-//				Console.WriteLine($"서버에 연결할 수 없음: {e.Message}");
-//			}
+				mAvailableList = JsonConvert.DeserializeObject<List<AvailableGame>>(str);
+			}
+			catch (HttpRequestException e)
+			{
+				Console.WriteLine($"서버에 연결할 수 없음: {e.Message}");
+			}
 
 
-//			LoadProcessList();
+			LoadProcessList();
 		}
 
 		private void btnRunPatch_Click(object sender, EventArgs e)

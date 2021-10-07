@@ -290,7 +290,7 @@ namespace KoreanPass
 
 		private void btnShowLicense_Click(object sender, EventArgs e)
 		{
-			//new License().ShowDialog();
+			new License().ShowDialog();
 		}
 	}
 }
